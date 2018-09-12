@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../functions')
 
-from FrankeFunction import FrankeFunction
+from functions import FrankeFunction, MSE, R2_Score
 
 
 from mpl_toolkits.mplot3d import Axes3D
