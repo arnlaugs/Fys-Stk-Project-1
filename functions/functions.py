@@ -21,7 +21,7 @@ def MSE(y, y_tilde):
 	Function for computing mean squared error.
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
-	return np.sum(y-y_tilde)**2/len(y)
+	return np.sum((y-y_tilde)**2)/len(y)
 
 def R2_Score(y, y_tilde):
 	"""
@@ -29,4 +29,4 @@ def R2_Score(y, y_tilde):
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
 
-	return 1 - np.sum(y-y_tilde)**2/np.sum(y-np.average(y))**2
+	return 1 - np.sum((y-y_tilde)**2)/np.sum((y-np.average(y))**2)
