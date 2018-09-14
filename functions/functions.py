@@ -34,13 +34,12 @@ def R2_Score(y, y_tilde):
 	return 1 - np.sum((y-y_tilde)**2)/np.sum((y-np.average(y))**2)
 
 
-def create_X(x, y, n = 5, mesh = False):
+def create_X(x, y, n = 5):
 	"""
 	Function for creating a X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
-	Input is x and y mesh or raveled mesh, keyword agruments n is the degree of the polinomial you want to fit,
-	mesh is if the input variables are raveled or not.
+	Input is x and y mesh or raveled mesh, keyword agruments n is the degree of the polinomial you want to fit.
 	"""
-	if mesh:
+	if len(x.shape) > 1:
 		x = np.ravel(x)
 		y = np.ravel(y)
 
@@ -87,3 +86,13 @@ def plot_surface(x, y, z, title, show = False):
 		plt.show()
 
 	return fig, ax ,surf
+
+
+def calc_beta(X, z):
+	"""
+	Function for returning beta for ordinary least square regression
+	"""
+	if len(z.shape) > 1:
+		z = np.ravel(z)
+
+	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)

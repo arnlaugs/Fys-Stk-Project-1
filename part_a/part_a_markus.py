@@ -1,7 +1,7 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface
+from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, calc_beta
 
 # Importing global packages
 import numpy as np
@@ -20,17 +20,17 @@ z_noise = FrankeFunction(x_mesh_, y_mesh_) + np.random.normal(scale = 1, size = 
 
 
 # Regression
-X = create_X(x_mesh_, y_mesh_, mesh = True)
+X = create_X(x_mesh_, y_mesh_)
 
 
 # Calculate the regression, using pinv in case of singular matrix
-beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(np.ravel(z_noise))
+beta = calc_beta(X, z_noise)
 
 # Create best-fit matrix for plotting
 x_r = np.linspace(0,1,N)
 y_r = np.linspace(0,1,N)
 x_mesh, y_mesh = np.meshgrid(x,y)
-X_r = create_X(x_mesh, y_mesh, mesh = True)
+X_r = create_X(x_mesh, y_mesh)
 
 z_reg = (X_r.dot(beta)).reshape((N,N))
 
