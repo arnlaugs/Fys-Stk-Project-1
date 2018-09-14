@@ -30,3 +30,23 @@ def R2_Score(y, y_tilde):
 	"""
 
 	return 1 - np.sum((y-y_tilde)**2)/np.sum((y-np.average(y))**2)
+
+
+def create_X(x, y, n = 5, mesh = False):
+	"""
+	Function for creating a X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
+	"""
+	if mesh:
+		x = np.ravel(x)
+		y = np.ravel(y)
+
+	N = len(x)
+	l = int((n+1)*(n+2)/2)		# Number of elements in beta
+	X = np.zeros((N,l))
+
+	for i in range(1,n+1):
+		q = int((i)*(i+1)/2)
+		for k in range(i+1):
+			X[:,q+k] = x**(i-k) + y**k
+
+	return X

@@ -1,7 +1,7 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-from functions import FrankeFunction, MSE, R2_Score
+from functions import FrankeFunction, MSE, R2_Score, create_X
 
 # Importing global packages
 from mpl_toolkits.mplot3d import Axes3D
@@ -20,10 +20,12 @@ ax2 = fig2.gca(projection='3d')
 fig3 = plt.figure()
 ax3 = fig3.gca(projection='3d')
 
+#np.random.seed(79162)
+
 # Make data.
 N = 1000
-x = np.sort(np.random.uniform(0, 1, N))
-y = np.sort(np.random.uniform(0, 1, N))
+x = np.linspace(0,1,N)#np.sort(np.random.uniform(0, 1, N))
+y = np.linspace(0,1,N)#np.sort(np.random.uniform(0, 1, N))
 x_mesh_, y_mesh_ = np.meshgrid(x,y)
 
 # Add noise
@@ -32,39 +34,24 @@ z_noise = z + np.random.normal(scale = 1, size = (N,N))
 
 
 # Ravel the data to a vector
+x_ = np.ravel(x_mesh_)
+y_ = np.ravel(y_mesh_)
 z_noise = np.ravel(z_noise)
 
 # Regression
-n = 3
-l = int((n+1)*(n+2)/2)		# Number of elements in 
-X = np.zeros((N*N,l))
-X[:,0] = 1
-
-for v in range(N):
-	for i in range(1,n+1):
-		q = int((i)*(i+1)/2)
-		for k in range(1,i+1):
-			X[v*N:(v+1)*N,q+k] = x**(i-k) + y[v]**k
+n = 5
+l = int((n+1)*(n+2)/2)		# Number of elements in beta
+X = create_X(x_, y_)
 
 
-print(X)
-# Calculate the regression, using pinv, in case of singular matrix
+# Calculate the regression, using pinv in case of singular matrix
 beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z_noise)
-
-print(beta.shape)
 
 # Create best-fit matrix for plotting
 x_r = np.linspace(0,1,N)
 y_r = np.linspace(0,1,N)
-X_r = np.zeros((N*N,l))
-X_r[:,0] = 1
-x_mesh, y_mesh = np.meshgrid(x_r,y_r)
-
-for v in range(N):
-	for i in range(1,n+1):
-		q = int((i)*(i+1)/2)
-		for k in range(i+1):
-			X_r[v*N:(v+1)*N,q+k] = x_r**(i-k) + y_r[v]**k
+x_mesh, y_mesh = np.meshgrid(x,y)
+X_r = create_X(x_mesh, y_mesh, mesh = True)
 
 z_reg = (X_r.dot(beta)).reshape((N,N))
 
@@ -102,7 +89,6 @@ ax2.set_title("Analytical solution")
 
 
 
-
 # Plot the surface.of the noisy data
 z_noise = z_noise.reshape((N,N))	# Reshape the data to a matrix
 surf3 = ax3.plot_surface(x_mesh_, y_mesh_, z_noise, cmap=cm.coolwarm,
@@ -110,12 +96,15 @@ surf3 = ax3.plot_surface(x_mesh_, y_mesh_, z_noise, cmap=cm.coolwarm,
 
 
 # Customize the z axis.
-ax3.set_zlim(-0.10, 1.40)
+ax3.set_zlim(-1.10, 2.40)
 ax3.zaxis.set_major_locator(LinearLocator(10))
 ax3.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
 # Add a color bar which maps values to colors.
 fig3.colorbar(surf, shrink=0.5, aspect=5)
 ax3.set_title("Data with noise")
+
+print("MSE: %.5f" %MSE(z, z_reg))
+print("R2_Score: %.5f" %R2_Score(z, z_reg))
 
 plt.show()
