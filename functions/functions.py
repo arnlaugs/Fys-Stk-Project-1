@@ -35,6 +35,7 @@ def R2_Score(y, y_tilde):
 def create_X(x, y, n = 5, mesh = False):
 	"""
 	Function for creating a X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
+	Input is x and y mesh or raveled mesh.
 	"""
 	if mesh:
 		x = np.ravel(x)
@@ -50,3 +51,36 @@ def create_X(x, y, n = 5, mesh = False):
 			X[:,q+k] = x**(i-k) + y**k
 
 	return X
+
+
+def plot_surface(x, y, z, title, show = False):
+	"""
+	Function to plot surfaces of z, given an x and y.
+	Input: x, y, z (NxN matrices), and a title (string)
+	"""
+
+	from mpl_toolkits.mplot3d import Axes3D
+	import matplotlib.pyplot as plt
+	from matplotlib import cm
+	from matplotlib.ticker import LinearLocator, FormatStrFormatter
+
+	fig = plt.figure()
+	ax = fig.gca(projection='3d')
+
+	# Plot the surface.of the best fit
+	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
+                       linewidth=0, antialiased=False)
+
+	# Customize the z axis.
+	ax.set_zlim(-0.10, 1.40)
+	ax.zaxis.set_major_locator(LinearLocator(10))
+	ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+	# Add a color bar which maps values to colors.
+	fig.colorbar(surf, shrink=0.5, aspect=5)
+	ax.set_title(title)
+
+	if show:
+		plt.show()
+
+	return fig, ax ,surf
