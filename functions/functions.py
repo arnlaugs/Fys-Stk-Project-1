@@ -101,7 +101,7 @@ def train_test_data(x_,y_,z_,i):
 	y_test=np.take(y_,i)
 	z_test=np.take(z_,i)
 
-return x_learn,y_learn,z_learn,x_test,y_test,z_test
+	return x_learn,y_learn,z_learn,x_test,y_test,z_test
 
 
 def calc_beta(X, z):
