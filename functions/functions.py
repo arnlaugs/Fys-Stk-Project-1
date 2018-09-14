@@ -4,6 +4,8 @@ A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
  - MSE for computing the mean squared error
  - R2_Score for computing the R2 score
+ - create_X for creating the design matrix
+ - plot_surface for plotting surfaces z(x,y)
 """
 
 
@@ -21,7 +23,7 @@ def MSE(y, y_tilde):
 	Function for computing mean squared error.
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
-	return np.sum((y-y_tilde)**2)/len(y)
+	return np.sum((y-y_tilde)**2)/y.size
 
 def R2_Score(y, y_tilde):
 	"""
@@ -35,7 +37,8 @@ def R2_Score(y, y_tilde):
 def create_X(x, y, n = 5, mesh = False):
 	"""
 	Function for creating a X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
-	Input is x and y mesh or raveled mesh.
+	Input is x and y mesh or raveled mesh, keyword agruments n is the degree of the polinomial you want to fit,
+	mesh is if the input variables are raveled or not.
 	"""
 	if mesh:
 		x = np.ravel(x)
