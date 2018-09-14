@@ -89,9 +89,11 @@ def plot_surface(x, y, z, title, show = False):
 
 
 def train_test_data(x_,y_,z_,i):
-    """Takes in x,y and z arrays, and a array with random indesies iself.
-        returns learning arrays for x, y and z with (N-len(i)) dimetions
-         and test data with length (len(i))"""
+    """
+    Takes in x,y and z arrays, and a array with random indesies iself.
+    returns learning arrays for x, y and z with (N-len(i)) dimetions
+    and test data with length (len(i))
+    """
     x_learn=np.delete(x_,i)
     y_learn=np.delete(y_,i)
     z_learn=np.delete(z_,i)
