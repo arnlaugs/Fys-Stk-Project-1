@@ -91,6 +91,7 @@ def plot_surface(x, y, z, title, show = False):
 def calc_beta(X, z):
 	"""
 	Function for returning beta for ordinary least square regression
+	Using pseudo inverse when the matrix is singular
 	"""
 	if len(z.shape) > 1:
 		z = np.ravel(z)
