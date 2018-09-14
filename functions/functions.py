@@ -4,6 +4,8 @@ A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
  - MSE for computing the mean squared error
  - R2_Score for computing the R2 score
+ - create_X for creating the design matrix
+ - plot_surface for plotting surfaces z(x,y)
 """
 
 
@@ -21,7 +23,7 @@ def MSE(y, y_tilde):
 	Function for computing mean squared error.
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
-	return np.sum((y-y_tilde)**2)/len(y)
+	return np.sum((y-y_tilde)**2)/y.size
 
 def R2_Score(y, y_tilde):
 	"""
@@ -32,12 +34,12 @@ def R2_Score(y, y_tilde):
 	return 1 - np.sum((y-y_tilde)**2)/np.sum((y-np.average(y))**2)
 
 
-def create_X(x, y, n = 5, mesh = False):
+def create_X(x, y, n = 5):
 	"""
 	Function for creating a X-matrix with rows [1, x, y, x^2, xy, xy^2 , etc.]
-	Input is x and y mesh or raveled mesh.
+	Input is x and y mesh or raveled mesh, keyword agruments n is the degree of the polinomial you want to fit.
 	"""
-	if mesh:
+	if len(x.shape) > 1:
 		x = np.ravel(x)
 		y = np.ravel(y)
 
@@ -85,6 +87,7 @@ def plot_surface(x, y, z, title, show = False):
 
 	return fig, ax ,surf
 
+
 def train_test_data(x_,y_,z_,i):
     """Takes in x,y and z arrays, and a array with random indesies iself.
         returns learning arrays for x, y and z with (N-len(i)) dimetions
@@ -97,3 +100,13 @@ def train_test_data(x_,y_,z_,i):
     z_test=np.take(z_,i)
 
     return x_learn,y_learn,z_learn,x_test,y_test,z_test
+
+
+def calc_beta(X, z):
+	"""
+	Function for returning beta for ordinary least square regression
+	"""
+	if len(z.shape) > 1:
+		z = np.ravel(z)
+
+	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
