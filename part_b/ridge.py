@@ -5,8 +5,6 @@ from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, cal
 import numpy as np
 
 
-
-
 class Ridge():
     def __init__(self, lmbda=1.0):
         self.lmbda = lmbda
@@ -25,14 +23,14 @@ class Ridge():
 
         Returns
         --------
-        beta : array_like, shape=[?]
+        beta : array_like, shape=[n_features]
             Regression parameters.
         """
         if len(y.shape) > 1:
             y = np.ravel(y)
 
         I = np.identity(X.shape[1])
-        self.beta = np.linalg.inv(X.T.dot(X) + self.lmbda * I).dot(X.T).dot(y)
+        self.beta = np.linalg.pinv(X.T.dot(X) + self.lmbda * I).dot(X.T).dot(y)
 
         return self.beta
 
@@ -56,35 +54,37 @@ class Ridge():
         return y_tilde
 
 
+if __name__ == '__main__':
+    # Make data.
+    N = 1000
+    x = np.sort(np.random.uniform(0, 1, N))
+    y = np.sort(np.random.uniform(0, 1, N))
+    x_mesh_, y_mesh_ = np.meshgrid(x,y)
+    z = FrankeFunction(x_mesh_, y_mesh_)
+
+    # Add noise
+    z_noise = z + np.random.normal(scale = 1, size = (N,N))
+
+    # Regression
+    X = create_X(x_mesh_, y_mesh_)
+    method = Ridge(lmbda=1)
+    method.fit(X, z_noise)
 
 
-# Make data.
-N = 1000
-x = np.sort(np.random.uniform(0, 1, N))
-y = np.sort(np.random.uniform(0, 1, N))
-x_mesh_, y_mesh_ = np.meshgrid(x,y)
+    # Create best-fit matrix for plotting
+    x_r = np.linspace(0,1,N)
+    y_r = np.linspace(0,1,N)
+    x_mesh, y_mesh = np.meshgrid(x,y)
+    X_r = create_X(x_mesh, y_mesh)
 
-# Add noise
-z_noise = FrankeFunction(x_mesh_, y_mesh_) + np.random.normal(scale = 1, size = (N,N))
+    z_reg = (method.predict(X_r)).reshape((N,N))
+    plot_surface(x_mesh, y_mesh, z_reg, "Ridge regression")
 
-# Regression
-X = create_X(x_mesh_, y_mesh_)
-
-
-R = Ridge()
-print(R.fit(X, z_noise))
+    print("MSE: %.5f" %MSE(z, z_reg))
+    print("R2_Score: %.5f" %R2_Score(z, z_reg))
 
 
-# Create best-fit matrix for plotting
-x_r = np.linspace(0,1,N)
-y_r = np.linspace(0,1,N)
-x_mesh, y_mesh = np.meshgrid(x,y)
-X_r = create_X(x_mesh, y_mesh)
 
-z_reg = (R.predict(X_r)).reshape((N,N))
-plot_surface(x_mesh, y_mesh, z_reg, "Ridge regression")
-
-
-from sklearn.linear_model import Ridge
-model = Ridge(alpha = 1, tol=0.1, fit_intercept=False).fit(X, np.ravel(z_noise))
-print (model.coef_)
+    from sklearn.linear_model import Ridge
+    model = Ridge(alpha = 1, tol=0.1, fit_intercept=False).fit(X, np.ravel(z_noise))
+    #print (model.coef_)
