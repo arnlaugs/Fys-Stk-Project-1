@@ -12,7 +12,7 @@ from ridge import Ridge
 
 # Load the terrain
 terrain = imread('n59_e010_1arc_v3.tif')
-print np.shape(terrain)
+print(np.shape(terrain))
 terrain = terrain[:1800,:1800]
 
 
