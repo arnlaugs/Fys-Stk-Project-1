@@ -151,11 +151,11 @@ def Bootstrap(x,y,z,k, method="OSL"):
             R2_=R2_Score(z_test,zpredict)
             beta_R2=beta
             o=t
-    print(o,R2_,l,MSE_)
-    print(beta_MSE)
-    print(beta_R2)
-    """
-   return (MSE_/k,R2_/k)
+     print(o,R2_,l,MSE_)
+     print(beta_MSE)
+     print(beta_R2)
+     """
+    return (MSE_/k,R2_/k)
 
 def K_fold(x,y,z,k,method="OSL"):
     """Function to who calculate the average MSE and R2 using k-fold.
@@ -169,13 +169,13 @@ def K_fold(x,y,z,k,method="OSL"):
     n_k=int(n/k)
     if n_k*k!=n:
         print("k needs to be a multiple of ", n)
-
+    i=np.arange(n)
     np.random.shuffle(i)
     
     MSE_=0
     R2_=0
     for t in range(k):
-        x_,y_,z_,x_test,y_test,z_test=train_test_data(x_1,y_1,z_1,i[t*n_k:(t+1)*n_k])
+        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
         if method=="OSL":
