@@ -113,3 +113,76 @@ def calc_beta(X, z):
 		z = np.ravel(z)
 
 	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
+
+def Bootstrap(x,y,z,k, method="OSL"):
+    """Function to who calculate the average MSE and R2 using bootstrap.
+    Takes in x,y and z varibles for a dataset, k number of times bootstraping and which method beta shall use. (OSL,Ridge or lasso)
+    Returns average MSE and average R2"""
+    
+    if len(x.shape) > 1:
+        x = np.ravel(x)
+        y = np.ravel(y)
+        z = np.ravel(z)    
+         
+    n=len(x)
+    i=np.arange(n)
+    antall=int(n*0.1)
+    MSE_=0
+    R2_=0
+
+    for t in range(k):
+        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
+        X= create_X(x_,y_)
+        X_test= create_X(x_test,y_test)
+        if method=="OSL":
+            beta=calc_beta(X,z_)
+        elif method=="Ridge":
+            print("implemet ridge")
+        z_predict=X_test.dot(beta)
+        MSE_+=MSE(z_test,z_predict)
+        R2_+=R2_Score(z_test,z_predict)
+        
+        """
+        if MSE(z_test,zpredict) <MSE_:
+            MSE_=MSE(z_test,zpredict)
+            beta_MSE=beta
+            l=t
+        if R2_Score(z_test,zpredict)>R2_:
+            R2_=R2_Score(z_test,zpredict)
+            beta_R2=beta
+            o=t
+    print(o,R2_,l,MSE_)
+    print(beta_MSE)
+    print(beta_R2)
+    """
+   return (MSE_/k,R2_/k)
+
+def K_fold(x,y,z,k,method="OSL"):
+    """Function to who calculate the average MSE and R2 using k-fold.
+    Takes in x,y and z varibles for a dataset, k number of folds and which method beta shall use. (OSL,Ridge or Lasso)
+    Returns average MSE and average R2"""
+    if len(x.shape) > 1:
+        x = np.ravel(x)
+        y = np.ravel(y)
+        z = np.ravel(z) 
+    n=len(x)
+    n_k=int(n/k)
+    if n_k*k!=n:
+        print("k needs to be a multiple of ", n)
+
+    np.random.shuffle(i)
+    
+    MSE_=0
+    R2_=0
+    for t in range(k):
+        x_,y_,z_,x_test,y_test,z_test=train_test_data(x_1,y_1,z_1,i[t*n_k:(t+1)*n_k])
+        X= create_X(x_,y_)
+        X_test= create_X(x_test,y_test)
+        if method=="OSL":
+            beta=calc_beta(X,z_)
+        elif method=="Ridge":
+            print("implemet ridge")
+        z_predict=X_test.dot(beta)
+        MSE_+=MSE(z_test,z_predict)
+        R2_+=R2_Score(z_test,z_predict)
+    return (MSE_/k,R2_/k)
