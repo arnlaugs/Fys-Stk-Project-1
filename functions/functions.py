@@ -1,4 +1,7 @@
+import sys
 import numpy as np
+from sklearn.linear_model import Lasso
+
 """
 A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
@@ -114,9 +117,9 @@ def calc_beta(X, z):
 
 	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
 
-def Bootstrap(x,y,z,k, method="OSL"):
+def Bootstrap(x,y,z,k,alpha, method="OLS"):
     """Function to who calculate the average MSE and R2 using bootstrap.
-    Takes in x,y and z varibles for a dataset, k number of times bootstraping and which method beta shall use. (OSL,Ridge or lasso)
+    Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
     Returns average MSE and average R2"""
     
     if len(x.shape) > 1:
@@ -134,11 +137,24 @@ def Bootstrap(x,y,z,k, method="OSL"):
         x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
-        if method=="OSL":
+        if method=="OLS":
             beta=calc_beta(X,z_)
+            z_predict=X_test.dot(beta)
         elif method=="Ridge":
-            print("implemet ridge")
-        z_predict=X_test.dot(beta)
+            sys.path.append('../part_b')
+            from ridge import Ridge
+            model = Ridge(lmbda=alpha)
+            model.fit(X, z_)
+            z_predict=model.predict(X_test)
+
+        elif method=="Lasso":
+            model = Lasso(alpha=alpha, fit_intercept=False)
+            model.fit(X,z_)
+            z_predict=model.predict(X_test)
+        else:
+            "wrong method"
+        
+
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
         
@@ -157,9 +173,9 @@ def Bootstrap(x,y,z,k, method="OSL"):
      """
     return (MSE_/k,R2_/k)
 
-def K_fold(x,y,z,k,method="OSL"):
+def K_fold(x,y,z,k,alpha,method="OLS"):
     """Function to who calculate the average MSE and R2 using k-fold.
-    Takes in x,y and z varibles for a dataset, k number of folds and which method beta shall use. (OSL,Ridge or Lasso)
+    Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
     Returns average MSE and average R2"""
     if len(x.shape) > 1:
         x = np.ravel(x)
@@ -178,11 +194,22 @@ def K_fold(x,y,z,k,method="OSL"):
         x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
-        if method=="OSL":
+        if method=="OLS":
             beta=calc_beta(X,z_)
+            z_predict=X_test.dot(beta)
         elif method=="Ridge":
-            print("implemet ridge")
-        z_predict=X_test.dot(beta)
+            sys.path.append('../part_b')
+            from ridge import Ridge
+            model = Ridge(lmbda=alpha)
+            model.fit(X, z_)
+            z_predict=model.predict(X_test)
+
+        elif method=="Lasso":
+            model = Lasso(alpha=alpha, fit_intercept=False)
+            model.fit(X,z_)
+            z_predict=model.predict(X_test)
+        else:
+            "wrong method, try Lasso, Ridge or OLS"
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
