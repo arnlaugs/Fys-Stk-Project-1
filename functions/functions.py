@@ -121,12 +121,12 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
     """Function to who calculate the average MSE and R2 using bootstrap.
     Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
     Returns average MSE and average R2"""
-    
+
     if len(x.shape) > 1:
         x = np.ravel(x)
         y = np.ravel(y)
-        z = np.ravel(z)    
-         
+        z = np.ravel(z)
+
     n=len(x)
     i=np.arange(n)
     antall=int(n*0.1)
@@ -152,12 +152,12 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
             model.fit(X,z_)
             z_predict=model.predict(X_test)
         else:
-            "wrong method"
-        
+            print("Wrong method, try either Lasso, Ridge or OLS")
+
 
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
-        
+
         """
         if MSE(z_test,zpredict) <MSE_:
             MSE_=MSE(z_test,zpredict)
@@ -180,14 +180,14 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
     if len(x.shape) > 1:
         x = np.ravel(x)
         y = np.ravel(y)
-        z = np.ravel(z) 
+        z = np.ravel(z)
     n=len(x)
     n_k=int(n/k)
     if n_k*k!=n:
         print("k needs to be a multiple of ", n)
     i=np.arange(n)
     np.random.shuffle(i)
-    
+
     MSE_=0
     R2_=0
     for t in range(k):
@@ -209,7 +209,7 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
             model.fit(X,z_)
             z_predict=model.predict(X_test)
         else:
-            "wrong method, try Lasso, Ridge or OLS"
+            print("Wrong method, try either Lasso, Ridge or OLS")
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
