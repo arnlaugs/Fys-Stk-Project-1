@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.linear_model import Lasso
 
 
-# Making meshgrid of datapoints ̈́
+# Making meshgrid of datapoints
 N = 1000
 x = np.sort(np.random.uniform(0, 1, N))
 y = np.sort(np.random.uniform(0, 1, N))

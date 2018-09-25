@@ -5,12 +5,13 @@ from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, cal
 import numpy as np
 
 
+
 class Ridge():
     def __init__(self, lmbda=1.0):
         self.lmbda = lmbda
 
 
-    def fit(self, X, y):
+    def fit(self, X, y, ret=False):
         """
         Fits the model.
 
@@ -32,7 +33,9 @@ class Ridge():
         I = np.identity(X.shape[1])
         self.beta = np.linalg.pinv(X.T.dot(X) + self.lmbda * I).dot(X.T).dot(y)
 
-        return self.beta
+        if ret:
+            return self.beta
+
 
 
     def predict(self, X):
@@ -52,7 +55,6 @@ class Ridge():
 
         y_tilde = X.dot(self.beta)
         return y_tilde
-
 
 if __name__ == '__main__':
     # Make data.
