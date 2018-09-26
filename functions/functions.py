@@ -58,7 +58,7 @@ def create_X(x, y, n = 5):
 	return X
 
 
-def plot_surface(x, y, z, title, show = False):
+def plot_surface(x, y, z, title, show = False, trans = False):
 	"""
 	Function to plot surfaces of z, given an x and y.
 	Input: x, y, z (NxN matrices), and a title (string)
@@ -72,6 +72,8 @@ def plot_surface(x, y, z, title, show = False):
 	fig = plt.figure()
 	ax = fig.gca(projection='3d')
 
+	if trans:
+		z = z.T
 	# Plot the surface.of the best fit
 	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)

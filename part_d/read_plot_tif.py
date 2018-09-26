@@ -38,7 +38,7 @@ labels = ['Ordinary least squares', 'Ridge', 'Lasso']
 i=0
 for method in [R_ols, R_r, R_l]:
     z_reg = (method.predict(X)).reshape((N,N))
-    plot_surface(x_mesh, y_mesh, z_reg.reshape((N,N)), labels[i], show=True)
+    plot_surface(x_mesh, y_mesh, z_reg.reshape((N,N)), labels[i], show=True, trans = True)
 
     print('============================')
     print(labels[i])
