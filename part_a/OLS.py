@@ -1,16 +1,12 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, calc_beta
+from functions import *
 import numpy as np
 
 
 
-class OLS():
-    def __init__(self):
-        pass
-
-
+class OLS(REGRESSION):
     def fit(self, X, y, ret=False):
         """
         Fits the model.
@@ -35,21 +31,3 @@ class OLS():
         if ret:
             return self.beta
 
-
-    def predict(self, X):
-        """
-        Predicts the given parameters.
-
-        Parameters
-        -----------
-        X : array_like, shape=[n_samples, n_features]
-            Data
-
-        Returns
-        -------
-        y_tilde : array_like
-            The predicted values
-        """
-
-        y_tilde = X.dot(self.beta)
-        return y_tilde

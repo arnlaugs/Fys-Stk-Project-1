@@ -2,7 +2,7 @@ import sys
 sys.path.append('../functions')
 
 
-from functions import FrankeFunction, MSE, R2_Score, create_X, train_test_data, calc_beta, Bootstrap, K_fold
+from functions import *
 sys.path.append('../part_b')
 from ridge import Ridge
 

@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 from sklearn.linear_model import Lasso
+import numpy as np
 
 """
 A file for all common functions used in project 1
@@ -220,3 +221,60 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
+
+class REGRESSION():
+	"""
+	Superclass for regression types
+	"""
+
+	def __init__(self):
+		pass
+
+	def predict(self, X):
+		"""
+		Predicts the given parameters.
+
+		Parameters
+		-----------
+		X : array_like, shape=[n_samples, n_features]
+		    Data
+
+		Returns
+		-------
+		y_tilde : array_like
+		    The predicted values
+		"""
+
+		y_tilde = X.dot(self.beta)
+		return y_tilde
+
+	def store_beta(self, name):
+		"""
+		Saves computed beta-values
+
+		Parameters
+		-----------
+		Name : string, name of file to store values to
+
+		Returns
+		-------
+		
+		"""
+
+		np.save(name, self.beta)
+
+	def load_beta(self, name):
+		"""
+		Loads stored beta-values
+
+		Parameters
+		-----------
+		Name : string, name of file values are stored in
+
+		Returns
+		-------
+		
+		"""
+		
+		self.beta = np.load(name)
+

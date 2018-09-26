@@ -3,7 +3,7 @@ import sys
 sys.path.append('../functions')
 sys.path.append('../part_a')      # Add folder with OLS
 sys.path.append('../part_b')      # Add folder with Ridge
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface
+from functions import *
 import numpy as np
 from imageio import imread
 import matplotlib.pyplot as plt
@@ -12,6 +12,17 @@ from matplotlib import cm
 from OLS import OLS
 from ridge import Ridge
 from sklearn.linear_model import Lasso
+
+# Read value for n from command line
+
+if len(sys.argv) > 1:
+	try:
+		n = int(sys.argv[1])
+	except ValueError:
+		print("Value provided not convertible to int, using n = 5")
+		n = 5
+else:
+	n = 5
 
 
 # Load the terrain
@@ -25,11 +36,19 @@ x = np.linspace(0,1, np.shape(terrain)[0])
 y = np.linspace(0,1, np.shape(terrain)[1])
 x_mesh, y_mesh = np.meshgrid(x,y)
 
-X = create_X(x_mesh, y_mesh)
+X = create_X(x_mesh, y_mesh, n = n)
 
-R_ols = OLS();                  R_ols.fit(X, terrain)
-R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
-R_l = Lasso(alpha=0.1, fit_intercept=False); R_l.fit(X, np.ravel(terrain))
+R_ols = OLS()
+R_ols.fit(X, terrain)
+R_ols.store_beta("OLS_%i" %n)
+
+R_r = Ridge(lmbda=1.0)
+R_r.fit(X, terrain)
+R_r.store_beta("Ridge_%i" %n)
+
+R_l = Lasso(alpha=.1, fit_intercept=False)
+R_l.fit(X, np.ravel(terrain))
+np.save("Lasso_%i" %n, R_l.coef_)
 
 
 
