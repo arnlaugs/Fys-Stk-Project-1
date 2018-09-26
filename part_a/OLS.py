@@ -1,7 +1,7 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, calc_beta, _REGRESSION_
+from functions import *
 import numpy as np
 
 

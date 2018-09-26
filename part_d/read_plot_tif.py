@@ -3,7 +3,7 @@ import sys
 sys.path.append('../functions')
 sys.path.append('../part_a')      # Add folder with OLS
 sys.path.append('../part_b')      # Add folder with Ridge
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface
+from functions import *
 import numpy as np
 from imageio import imread
 import matplotlib.pyplot as plt
