@@ -76,8 +76,13 @@ def plot_surface(x, y, z, title, show = False):
 	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 
-	# Customize the z axis.
-	ax.set_zlim(-0.10, 1.40)
+	# Customize the z axis automatically
+	z_min = np.min(z)
+	z_min = z_min*1.01 if z_min < 0 else z_min*.99
+	z_max = np.max(z)
+	z_max = z_max*1.01 if z_max > 0 else z_max*.99
+
+	ax.set_zlim(z_min, z_max)
 	ax.zaxis.set_major_locator(LinearLocator(10))
 	ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
