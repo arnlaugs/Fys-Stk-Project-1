@@ -145,23 +145,22 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
         if method=="OLS":
-            beta=calc_beta(X,z_)
-            z_predict=X_test.dot(beta)
+            sys.path.append('../part_a')
+            from OLS import OLS
+            model=OLS()
         elif method=="Ridge":
             sys.path.append('../part_b')
             from ridge import Ridge
             model = Ridge(lmbda=alpha)
-            model.fit(X, z_)
-            z_predict=model.predict(X_test)
 
         elif method=="Lasso":
             model = Lasso(alpha=alpha, fit_intercept=False)
-            model.fit(X,z_)
-            z_predict=model.predict(X_test)
+
         else:
             print("Wrong method, try either Lasso, Ridge or OLS")
 
-
+        model.fit(X,z_)
+        z_predict=model.predict(X_test)
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
 
@@ -202,21 +201,22 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
         if method=="OLS":
-            beta=calc_beta(X,z_)
-            z_predict=X_test.dot(beta)
+            sys.path.append('../part_a')
+            from OLS import OLS
+            model=OLS()
         elif method=="Ridge":
             sys.path.append('../part_b')
             from ridge import Ridge
             model = Ridge(lmbda=alpha)
-            model.fit(X, z_)
-            z_predict=model.predict(X_test)
 
         elif method=="Lasso":
             model = Lasso(alpha=alpha, fit_intercept=False)
-            model.fit(X,z_)
-            z_predict=model.predict(X_test)
+
         else:
             print("Wrong method, try either Lasso, Ridge or OLS")
+
+        model.fit(X,z_)
+        z_predict=model.predict(X_test)
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
