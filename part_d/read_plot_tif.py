@@ -13,6 +13,17 @@ from OLS import OLS
 from ridge import Ridge
 from sklearn.linear_model import Lasso
 
+# Read value for n from command line
+
+if len(sys.argv) > 1:
+	try:
+		n = int(sys.argv[1])
+	except ValueError:
+		print("Value provided not convertible to int, using n = 5")
+		n = 5
+else:
+	n = 5
+
 
 # Load the terrain
 terrain = imread('n59_e010_1arc_v3.tif')
@@ -25,7 +36,7 @@ x = np.linspace(0,1, np.shape(terrain)[0])
 y = np.linspace(0,1, np.shape(terrain)[1])
 x_mesh, y_mesh = np.meshgrid(x,y)
 
-X = create_X(x_mesh, y_mesh)
+X = create_X(x_mesh, y_mesh, n = n)
 
 R_ols = OLS();                  R_ols.fit(X, terrain)
 R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
