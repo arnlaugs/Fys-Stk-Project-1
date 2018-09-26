@@ -1,12 +1,12 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, Bootstrap, K_fold
-import numpy as np
+from functions import FrankeFunction, MSE, R2_Score, create_X, plot_surface, Bootstrap, K_fold, _REGRESSION_
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-class Ridge():
+class Ridge(REGRESSION):
     def __init__(self, lmbda=1.0):
         self.lmbda = lmbda
 
@@ -37,24 +37,6 @@ class Ridge():
             return self.beta
 
 
-
-    def predict(self, X):
-        """
-        Predicts the given parameters.
-
-        Parameters
-        -----------
-        X : array_like, shape=[n_samples, n_features]
-            Data
-
-        Returns
-        -------
-        y_tilde : array_like
-            The predicted values
-        """
-
-        y_tilde = X.dot(self.beta)
-        return y_tilde
 
 
 

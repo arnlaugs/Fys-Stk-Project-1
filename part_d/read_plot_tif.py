@@ -38,9 +38,17 @@ x_mesh, y_mesh = np.meshgrid(x,y)
 
 X = create_X(x_mesh, y_mesh, n = n)
 
-R_ols = OLS();                  R_ols.fit(X, terrain)
-R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
-R_l = Lasso(alpha=0.1, fit_intercept=False); R_l.fit(X, np.ravel(terrain))
+R_ols = OLS()
+R_ols.fit(X, terrain)
+R_ols.store_beta("OLS_%i" %n)
+
+R_r = Ridge(lmbda=1.0)
+R_r.fit(X, terrain)
+R_r.store_beta("Ridge_%i" %n)
+
+R_l = Lasso(alpha=.1, fit_intercept=False)
+R_l.fit(X, np.ravel(terrain))
+np.save("Lasso_%i" %n, R_l.coef_)
 
 
 
