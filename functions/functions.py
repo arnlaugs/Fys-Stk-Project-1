@@ -35,7 +35,7 @@ def R2_Score(y, y_tilde):
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
 
-	return 1 - np.sum((y-y_tilde)**2)/np.sum((y-np.average(y))**2)
+	return 1 - np.sum((y[:-2]-y_tilde[:-2])**2)/np.sum((y[:-2]-np.average(y))**2)
 
 
 def create_X(x, y, n = 5):
@@ -222,6 +222,8 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
 
+    
+
 class REGRESSION():
 	"""
 	Superclass for regression types
@@ -258,7 +260,7 @@ class REGRESSION():
 
 		Returns
 		-------
-		
+
 		"""
 
 		np.save(name, self.beta)
@@ -273,8 +275,19 @@ class REGRESSION():
 
 		Returns
 		-------
-		
+
 		"""
-		
+
 		self.beta = np.load(name)
 
+
+def update_progress(job_title, progress):
+    """
+    Shows the progress of an for-loop.
+    """
+    length = 20 # modify this to change the length
+    block = int(round(length*progress))
+    msg = "\r{0}: [{1}] {2}%".format(job_title, "#"*block + "-"*(length-block), round(progress*100, 2))
+    if progress >= 1: msg += " DONE\r\n"
+    sys.stdout.write(msg)
+    sys.stdout.flush()
