@@ -18,7 +18,7 @@ z_noise = z + np.random.normal(scale = 1, size = (N,N))
 
 # Perform regression
 X = create_X(x_mesh_, y_mesh_)
-model = Lasso(alpha=0.0001, fit_intercept=False)
+model = Lasso(alpha=1e-10, fit_intercept=False)
 model.fit(X, np.ravel(z_noise))
 
 # Create best-fit matrix for plotting
@@ -27,6 +27,7 @@ y_r = np.linspace(0,1,N)
 x_mesh, y_mesh = np.meshgrid(x,y)
 X_r = create_X(x_mesh, y_mesh)
 
+# Predict
 z_reg = (model.predict(X_r)).reshape((N,N))
 plot_surface(x_mesh, y_mesh, z_reg, "Lasso regression", show=True)
 

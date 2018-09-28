@@ -30,4 +30,3 @@ class OLS(REGRESSION):
 
         if ret:
             return self.beta
-
