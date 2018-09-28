@@ -222,7 +222,21 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
         R2_+=R2_Score(z_test,z_predict)
     return (MSE_/k,R2_/k)
 
-    
+
+def variance(y_tilde):
+    """
+    Calculates the variance of the predicted values y_tilde.
+    """
+    return np.sum((y_tilde - np.mean(y_tilde))**2)/np.size(y_tilde)
+
+
+def bias(y, y_tilde):
+    """
+    Calculates the bias of the predicted values y_tilde compared to
+    the actual data y.
+    """
+    return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
+
 
 class REGRESSION():
 	"""
