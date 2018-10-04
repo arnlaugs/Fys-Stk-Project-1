@@ -1,16 +1,6 @@
 import sys
 sys.path.append('../functions')
-
-
 from functions import *
-sys.path.append('../part_b')
-from ridge import Ridge
-
-
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
 sys.path.append('../part_a')
@@ -22,7 +12,7 @@ m=5
 
 x = np.sort(np.random.uniform(0, 1, n_x))
 y = np.sort(np.random.uniform(0, 1, n_x))
-#y = np.arange(0, 1, 0.05)
+
 x, y = np.meshgrid(x,y)
 z = FrankeFunction(x, y)
 

@@ -2,9 +2,7 @@ import sys
 import numpy as np
 from sklearn.linear_model import Lasso
 import numpy as np
-from matplotlib import cm
-
-
+from matplotlib import c
 """
 A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
