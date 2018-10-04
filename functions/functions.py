@@ -2,6 +2,8 @@ import sys
 import numpy as np
 from sklearn.linear_model import Lasso
 import numpy as np
+from matplotlib import cm
+
 
 """
 A file for all common functions used in project 1
@@ -59,10 +61,10 @@ def create_X(x, y, n = 5):
 	return X
 
 
-def plot_surface(x, y, z, title, show = False, trans = False):
+def plot_surface(x, y, z, title, show = False, trans = False,cmap=cm.coolwarm):
 	"""
 	Function to plot surfaces of z, given an x and y.
-	Input: x, y, z (NxN matrices), and a title (string)
+	Input: x, y, z (NxN'Modeler' matrices), and a title (string)
 	"""
 
 	from mpl_toolkits.mplot3d import Axes3D
@@ -76,7 +78,7 @@ def plot_surface(x, y, z, title, show = False, trans = False):
 	if trans:
 		z = z.T
 	# Plot the surface.of the best fit
-	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
+	surf = ax.plot_surface(x, y, z, cmap=cmap,
                        linewidth=0, antialiased=False)
 
 	# Customize the z axis automatically
@@ -88,7 +90,7 @@ def plot_surface(x, y, z, title, show = False, trans = False):
 	ax.set_zlim(z_min, z_max)
 	ax.zaxis.set_major_locator(LinearLocator(10))
 	ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
+	ax.view_init(azim=20,elev=45)
 	# Add a color bar which maps values to colors.
 	fig.colorbar(surf, shrink=0.5, aspect=5)
 	ax.set_title(title)
@@ -180,10 +182,15 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
      """
     return (MSE_/k,R2_/k)
 
-def K_fold(x,y,z,k,alpha,method="OLS"):
+def K_fold(x,y,z,k,alpha,model,m=5):
     """Function to who calculate the average MSE and R2 using k-fold.
     Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
     Returns average MSE and average R2"""
+    sys.path.append('../part_a')
+    from OLS import OLS
+    sys.path.append('../part_b')
+    from ridge import Ridge
+    print(m)
     if len(x.shape) > 1:
         x = np.ravel(x)
         y = np.ravel(y)
@@ -191,36 +198,29 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
     n=len(x)
     n_k=int(n/k)
     if n_k*k!=n:
-        print("k needs to be a multiple of ", n)
+        print("k needs to be a multiple of ", n,k)
     i=np.arange(n)
     np.random.shuffle(i)
 
     MSE_=0
     R2_=0
+    Variance_=0
+    Bias_=0
     for t in range(k):
         x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
-        X= create_X(x_,y_)
-        X_test= create_X(x_test,y_test)
-        if method=="OLS":
-            sys.path.append('../part_a')
-            from OLS import OLS
-            model=OLS()
-        elif method=="Ridge":
-            sys.path.append('../part_b')
-            from ridge import Ridge
-            model = Ridge(lmbda=alpha)
+        X= create_X(x_,y_,n=m)
+        X_test= create_X(x_test,y_test,n=m)
 
-        elif method=="Lasso":
-            model = Lasso(alpha=alpha, fit_intercept=False)
-
-        else:
-            print("Wrong method, try either Lasso, Ridge or OLS")
 
         model.fit(X,z_)
         z_predict=model.predict(X_test)
+
         MSE_+=MSE(z_test,z_predict)
         R2_+=R2_Score(z_test,z_predict)
-    return (MSE_/k,R2_/k)
+        Bias_+=bias(z_test,z_predict)
+        Variance_+=variance(z_predict)
+
+    return (MSE_/k,R2_/k, Bias_/k,Variance_/k)
 
 
 def variance(y_tilde):
