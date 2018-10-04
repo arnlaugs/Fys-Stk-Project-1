@@ -301,3 +301,7 @@ def update_progress(job_title, progress):
 	if progress >= 1: msg += " DONE\r\n"
 	sys.stdout.write(msg)
 	sys.stdout.flush()
+
+def savefigure(name):
+    from matplotlib2tikz import save as tikz_save
+    tikz_save(name, figureheight='\\figureheight', figurewidth='\\figurewidth')

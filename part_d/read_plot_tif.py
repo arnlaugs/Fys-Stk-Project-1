@@ -30,8 +30,8 @@ x_mesh, y_mesh = np.meshgrid(x,y)
 X = create_X(x_mesh, y_mesh,n=m)
 
 R_ols = OLS();                  R_ols.fit(X, terrain)
-#R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
-#R_l = Lasso(alpha=0.1, fit_intercept=False); R_l.fit(X, np.ravel(terrain))
+R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
+R_l = Lasso(alpha=0.1, fit_intercept=False); R_l.fit(X, np.ravel(terrain))
 
 
 
@@ -39,7 +39,7 @@ R_ols = OLS();                  R_ols.fit(X, terrain)
 labels = ['Ordinary least squares', 'Ridge', 'Lasso']
 i=0
 
-for method in [R_ols]:
+for method in [R_ols, R_r, R_l]:
     z_reg = (method.predict(X)).reshape((N,N))
     fig, ax ,surf=plot_surface(x_mesh, y_mesh, (z_reg.reshape((N,N)).T), labels[i] + " m= "+str(m)+ " N=500", show=True,cmap=cm.viridis)
 
@@ -49,7 +49,7 @@ for method in [R_ols]:
     print("R2-score: %.5f \n" %R2_Score(terrain, z_reg))
 
     fig.show()
-    #fig.savefig(labels[i] + str(m)+ "N_500"+".png")
+    savefigure(labels[i] + str(m)+ "N_500")
     i+=1
 
 
