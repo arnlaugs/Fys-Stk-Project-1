@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.linear_model import Lasso
+from sklearn.linear_model import Lasso as scikit_Lasso
 from scipy.linalg import solve_triangular
 from functions import *
 
@@ -133,7 +133,7 @@ class Ridge(REGRESSION):
 class Lasso(REGRESSION):
 	def __init__(self, alpha=1e-10, fit_intercept=False):
 
-		self.model = Lasso(alpha=alpha, fit_intercept=fit_intercept)
+		self.model = scikit_Lasso(alpha=alpha, fit_intercept=fit_intercept)
 
 	def fit(self, X, y, ret=False):
 		"""

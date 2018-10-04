@@ -2,7 +2,7 @@ import sys
 import numpy as np
 from regression import OLS, Ridge, Lasso
 import numpy as np
-from matplotlib import c
+from matplotlib import cm
 """
 A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
