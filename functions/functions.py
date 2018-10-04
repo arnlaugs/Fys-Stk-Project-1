@@ -15,11 +15,11 @@ A file for all common functions used in project 1
 
 
 def FrankeFunction(x,y):
-    term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
-    term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
-    term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
-    term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
-    return term1 + term2 + term3 + term4
+	term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
+	term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
+	term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
+	term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
+	return term1 + term2 + term3 + term4
 
 
 def MSE(y, y_tilde):
@@ -77,7 +77,7 @@ def plot_surface(x, y, z, title, show = False, trans = False):
 		z = z.T
 	# Plot the surface.of the best fit
 	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
+					   linewidth=0, antialiased=False)
 
 	# Customize the z axis automatically
 	z_min = np.min(z)
@@ -116,125 +116,125 @@ def train_test_data(x_,y_,z_,i):
 
 
 def Bootstrap(x,y,z,k,alpha, method="OLS"):
-    """
-    Function to who calculate the average MSE and R2 using bootstrap.
-    Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
-    Returns average MSE and average R2
-    """
+	"""
+	Function to who calculate the average MSE and R2 using bootstrap.
+	Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
+	Returns average MSE and average R2
+	"""
 
-    if len(x.shape) > 1:
-        x = np.ravel(x)
-        y = np.ravel(y)
-        z = np.ravel(z)
+	if len(x.shape) > 1:
+		x = np.ravel(x)
+		y = np.ravel(y)
+		z = np.ravel(z)
 
-    n=len(x)
-    i=np.arange(n)
-    antall=int(n*0.1)
-    MSE_=0
-    R2_=0
+	n=len(x)
+	i=np.arange(n)
+	antall=int(n*0.1)
+	MSE_=0
+	R2_=0
 
-    for t in range(k):
-        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
-        X= create_X(x_,y_)
-        X_test= create_X(x_test,y_test)
-        
-        if method=="OLS":
-            model=OLS()
+	for t in range(k):
+		x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
+		X= create_X(x_,y_)
+		X_test= create_X(x_test,y_test)
+		
+		if method=="OLS":
+			model=OLS()
 
-        elif method=="Ridge":
-            model = Ridge(lmbda=alpha)
+		elif method=="Ridge":
+			model = Ridge(lmbda=alpha)
 
-        elif method=="Lasso":
-            model = Lasso(alpha=alpha, fit_intercept=False)
+		elif method=="Lasso":
+			model = Lasso(alpha=alpha, fit_intercept=False)
 
-        else:
-            print("Wrong method, try either Lasso, Ridge or OLS")
+		else:
+			print("Wrong method, try either Lasso, Ridge or OLS")
 
-        model.fit(X,z_)
-        z_predict=model.predict(X_test)
-        MSE_+=MSE(z_test,z_predict)
-        R2_+=R2_Score(z_test,z_predict)
+		model.fit(X,z_)
+		z_predict=model.predict(X_test)
+		MSE_+=MSE(z_test,z_predict)
+		R2_+=R2_Score(z_test,z_predict)
 
-        """
-        if MSE(z_test,zpredict) <MSE_:
-            MSE_=MSE(z_test,zpredict)
-            beta_MSE=beta
-            l=t
-        if R2_Score(z_test,zpredict)>R2_:
-            R2_=R2_Score(z_test,zpredict)
-            beta_R2=beta
-            o=t
-     print(o,R2_,l,MSE_)
-     print(beta_MSE)
-     print(beta_R2)
-     """
-    return (MSE_/k,R2_/k)
+		"""
+		if MSE(z_test,zpredict) <MSE_:
+			MSE_=MSE(z_test,zpredict)
+			beta_MSE=beta
+			l=t
+		if R2_Score(z_test,zpredict)>R2_:
+			R2_=R2_Score(z_test,zpredict)
+			beta_R2=beta
+			o=t
+	 print(o,R2_,l,MSE_)
+	 print(beta_MSE)
+	 print(beta_R2)
+	 """
+	return (MSE_/k,R2_/k)
 
 def K_fold(x,y,z,k,alpha,method="OLS"):
-    """
-    Function to who calculate the average MSE and R2 using k-fold.
-    Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
-    Returns average MSE and average R2
-    """
-    if len(x.shape) > 1:
-        x = np.ravel(x)
-        y = np.ravel(y)
-        z = np.ravel(z)
-    n=len(x)
-    n_k=int(n/k)
-    if n_k*k!=n:
-        print("k needs to be a multiple of ", n)
-    i=np.arange(n)
-    np.random.shuffle(i)
+	"""
+	Function to who calculate the average MSE and R2 using k-fold.
+	Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
+	Returns average MSE and average R2
+	"""
+	if len(x.shape) > 1:
+		x = np.ravel(x)
+		y = np.ravel(y)
+		z = np.ravel(z)
+	n=len(x)
+	n_k=int(n/k)
+	if n_k*k!=n:
+		print("k needs to be a multiple of ", n)
+	i=np.arange(n)
+	np.random.shuffle(i)
 
-    MSE_=0
-    R2_=0
-    for t in range(k):
-        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
-        X= create_X(x_,y_)
-        X_test= create_X(x_test,y_test)
-        if method=="OLS":
-            model=OLS()
-        elif method=="Ridge":
-            model = Ridge(lmbda=alpha)
+	MSE_=0
+	R2_=0
+	for t in range(k):
+		x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
+		X= create_X(x_,y_)
+		X_test= create_X(x_test,y_test)
+		if method=="OLS":
+			model=OLS()
+		elif method=="Ridge":
+			model = Ridge(lmbda=alpha)
 
-        elif method=="Lasso":
-            model = Lasso(alpha=alpha, fit_intercept=False)
+		elif method=="Lasso":
+			model = Lasso(alpha=alpha, fit_intercept=False)
 
-        else:
-            print("Wrong method, try either Lasso, Ridge or OLS")
+		else:
+			print("Wrong method, try either Lasso, Ridge or OLS")
 
-        model.fit(X,z_)
-        z_predict=model.predict(X_test)
-        MSE_+=MSE(z_test,z_predict)
-        R2_+=R2_Score(z_test,z_predict)
-    return (MSE_/k,R2_/k)
+		model.fit(X,z_)
+		z_predict=model.predict(X_test)
+		MSE_+=MSE(z_test,z_predict)
+		R2_+=R2_Score(z_test,z_predict)
+	return (MSE_/k,R2_/k)
 
 
 def variance(y_tilde):
-    """
-    Calculates the variance of the predicted values y_tilde.
-    """
-    return np.sum((y_tilde - np.mean(y_tilde))**2)/np.size(y_tilde)
+	"""
+	Calculates the variance of the predicted values y_tilde.
+	"""
+	return np.sum((y_tilde - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 
 def bias(y, y_tilde):
-    """
-    Calculates the bias of the predicted values y_tilde compared to
-    the actual data y.
-    """
-    return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
+	"""
+	Calculates the bias of the predicted values y_tilde compared to
+	the actual data y.
+	"""
+	return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 
 
 
 def update_progress(job_title, progress):
-    """
-    Shows the progress of an for-loop.
-    """
-    length = 20 # modify this to change the length
-    block = int(round(length*progress))
-    msg = "\r{0}: [{1}] {2}%".format(job_title, "#"*block + "-"*(length-block), round(progress*100, 2))
-    if progress >= 1: msg += " DONE\r\n"
-    sys.stdout.write(msg)
-    sys.stdout.flush()
+	"""
+	Shows the progress of an for-loop.
+	"""
+	length = 20 # modify this to change the length
+	block = int(round(length*progress))
+	msg = "\r{0}: [{1}] {2}%".format(job_title, "#"*block + "-"*(length-block), round(progress*100, 2))
+	if progress >= 1: msg += " DONE\r\n"
+	sys.stdout.write(msg)
+	sys.stdout.flush()

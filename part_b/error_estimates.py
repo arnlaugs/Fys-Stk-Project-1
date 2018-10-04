@@ -1,12 +1,12 @@
 # Importing functions from folder with common functions for project 1
 import sys
-sys.path.append('../part_a')
 sys.path.append('../functions')
 from functions import *
+from regression import OLS, Ridge
+
 import matplotlib.pyplot as plt
 import numpy as np
-from ridge import Ridge
-from OLS import OLS
+
 
 
 # Making meshgrid of datapoints and compute Franke's function

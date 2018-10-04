@@ -18,12 +18,12 @@ class REGRESSION():
 		Parameters
 		-----------
 		X : array_like, shape=[n_samples, n_features]
-		    Data
+			Data
 
 		Returns
 		-------
 		y_tilde : array_like
-		    The predicted values
+			The predicted values
 		"""
 
 		y_tilde = X.dot(self.beta)
@@ -63,71 +63,71 @@ class REGRESSION():
 
 
 class OLS(REGRESSION):
-    def fit(self, X, y, ret=False):
-        """
-        Fits the model.
+	def fit(self, X, y, ret=False):
+		"""
+		Fits the model.
 
-        Parameters
-        -----------
-        X : array_like, shape=[n_samples, n_features]
-            Training data
-        y : array-like, shape=[n_samples] or [n_samples, n_targets]
-            Target values
+		Parameters
+		-----------
+		X : array_like, shape=[n_samples, n_features]
+			Training data
+		y : array-like, shape=[n_samples] or [n_samples, n_targets]
+			Target values
 
-        Returns
-        --------
-        beta : array_like, shape=[n_features]
-            Regression parameters. Returns beta if ret=True.
-        """
-        if len(y.shape) > 1:
-            y = np.ravel(y)
-        """
-        try:
-            Q, R = np.linalg.qr(X)
+		Returns
+		--------
+		beta : array_like, shape=[n_features]
+			Regression parameters. Returns beta if ret=True.
+		"""
+		if len(y.shape) > 1:
+			y = np.ravel(y)
+		"""
+		try:
+			Q, R = np.linalg.qr(X)
 
-            c1 = Q.T.dot(y)
+			c1 = Q.T.dot(y)
 
-            self.beta = solve_triangular(R, c1)
+			self.beta = solve_triangular(R, c1)
 
-        except np.linalg.linalg.LinAlgError:
-        """    
-        self.beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(y)
+		except np.linalg.linalg.LinAlgError:
+		"""	
+		self.beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(y)
 
 
-        if ret:
-            return self.beta
+		if ret:
+			return self.beta
 
 
 
 class Ridge(REGRESSION):
-    def __init__(self, lmbda=1.0):
-        self.lmbda = lmbda
+	def __init__(self, lmbda=1.0):
+		self.lmbda = lmbda
 
 
-    def fit(self, X, y, ret=False):
-        """
-        Fits the model.
+	def fit(self, X, y, ret=False):
+		"""
+		Fits the model.
 
-        Parameters
-        -----------
-        X : array_like, shape=[n_samples, n_features]
-            Training data
-        y : array-like, shape=[n_samples] or [n_samples, n_targets]
-            Target values
+		Parameters
+		-----------
+		X : array_like, shape=[n_samples, n_features]
+			Training data
+		y : array-like, shape=[n_samples] or [n_samples, n_targets]
+			Target values
 
-        Returns
-        --------
-        beta : array_like, shape=[n_features]
-            Regression parameters.
-        """
-        if len(y.shape) > 1:
-            y = np.ravel(y)
+		Returns
+		--------
+		beta : array_like, shape=[n_features]
+			Regression parameters.
+		"""
+		if len(y.shape) > 1:
+			y = np.ravel(y)
 
-        I = np.identity(X.shape[1])
-        self.beta = np.linalg.pinv(X.T.dot(X) + self.lmbda * I).dot(X.T).dot(y)
+		I = np.identity(X.shape[1])
+		self.beta = np.linalg.pinv(X.T.dot(X) + self.lmbda * I).dot(X.T).dot(y)
 
-        if ret:
-            return self.beta
+		if ret:
+			return self.beta
 
 
 class Lasso(REGRESSION):
@@ -136,28 +136,28 @@ class Lasso(REGRESSION):
 		self.model = Lasso(alpha=alpha, fit_intercept=fit_intercept)
 
 	def fit(self, X, y, ret=False):
-        """
-        Fits the model using Lasso from scikit learn
+		"""
+		Fits the model using Lasso from scikit learn
 
-        Parameters
-        -----------
-        X : array_like, shape=[n_samples, n_features]
-            Training data
-        y : array-like, shape=[n_samples] or [n_samples, n_targets]
-            Target values
+		Parameters
+		-----------
+		X : array_like, shape=[n_samples, n_features]
+			Training data
+		y : array-like, shape=[n_samples] or [n_samples, n_targets]
+			Target values
 
-        Returns
-        --------
-        beta : array_like, shape=[n_features]
-            Regression parameters.
-        """
+		Returns
+		--------
+		beta : array_like, shape=[n_features]
+			Regression parameters.
+		"""
 
-        if len(y.shape) > 1:
-	        y = np.ravel(y)
+		if len(y.shape) > 1:
+			y = np.ravel(y)
 
-	    self.model.fit(X, y)
+		self.model.fit(X, y)
 
-	    self.beta = self.model.coef_
+		self.beta = self.model.coef_
 
-        if ret:
-            return self.beta
+		if ret:
+			return self.beta

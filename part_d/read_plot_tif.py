@@ -4,14 +4,15 @@ sys.path.append('../functions')
 sys.path.append('../part_a')      # Add folder with OLS
 sys.path.append('../part_b')      # Add folder with Ridge
 from functions import *
+from regression import OLS, Ridge, Lasso
+#from sklearn.linear_model import Lasso
+
 import numpy as np
 from imageio import imread
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
-from OLS import OLS
-from ridge import Ridge
-from sklearn.linear_model import Lasso
+
 
 # Read value for n from command line
 

@@ -1,13 +1,14 @@
 # Importing functions from folder with common functions for project 1
 import sys, time
+
 sys.path.append('../functions')
-sys.path.append('../part_a')
 from functions import *
+from regression import Ridge, OLS, Lasso
+
 import matplotlib.pyplot as plt
-from sklearn.linear_model import Lasso
+#from sklearn.linear_model import Lasso
 import numpy as np
-from OLS import OLS
-from ridge import Ridge
+
 
 
 

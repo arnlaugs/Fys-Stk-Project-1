@@ -3,6 +3,7 @@ import sys
 sys.path.append('../functions')
 from functions import *
 from regression import Ridge
+
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import Ridge as Ridge_sklearn
