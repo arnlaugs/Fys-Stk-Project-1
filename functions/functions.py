@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from sklearn.linear_model import Lasso
-import numpy as np
+from regression import *
 
 """
 A file for all common functions used in project 1
@@ -115,20 +115,12 @@ def train_test_data(x_,y_,z_,i):
 	return x_learn,y_learn,z_learn,x_test,y_test,z_test
 
 
-def calc_beta(X, z):
-	"""
-	Function for returning beta for ordinary least square regression
-	Using pseudo inverse when the matrix is singular
-	"""
-	if len(z.shape) > 1:
-		z = np.ravel(z)
-
-	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
-
 def Bootstrap(x,y,z,k,alpha, method="OLS"):
-    """Function to who calculate the average MSE and R2 using bootstrap.
+    """
+    Function to who calculate the average MSE and R2 using bootstrap.
     Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
-    Returns average MSE and average R2"""
+    Returns average MSE and average R2
+    """
 
     if len(x.shape) > 1:
         x = np.ravel(x)
@@ -145,13 +137,11 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
         x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
+        
         if method=="OLS":
-            sys.path.append('../part_a')
-            from OLS import OLS
             model=OLS()
+
         elif method=="Ridge":
-            sys.path.append('../part_b')
-            from ridge import Ridge
             model = Ridge(lmbda=alpha)
 
         elif method=="Lasso":
@@ -181,9 +171,11 @@ def Bootstrap(x,y,z,k,alpha, method="OLS"):
     return (MSE_/k,R2_/k)
 
 def K_fold(x,y,z,k,alpha,method="OLS"):
-    """Function to who calculate the average MSE and R2 using k-fold.
+    """
+    Function to who calculate the average MSE and R2 using k-fold.
     Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
-    Returns average MSE and average R2"""
+    Returns average MSE and average R2
+    """
     if len(x.shape) > 1:
         x = np.ravel(x)
         y = np.ravel(y)
@@ -202,12 +194,8 @@ def K_fold(x,y,z,k,alpha,method="OLS"):
         X= create_X(x_,y_)
         X_test= create_X(x_test,y_test)
         if method=="OLS":
-            sys.path.append('../part_a')
-            from OLS import OLS
             model=OLS()
         elif method=="Ridge":
-            sys.path.append('../part_b')
-            from ridge import Ridge
             model = Ridge(lmbda=alpha)
 
         elif method=="Lasso":
@@ -238,61 +226,6 @@ def bias(y, y_tilde):
     return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 
-class REGRESSION():
-	"""
-	Superclass for regression types
-	"""
-
-	def __init__(self):
-		pass
-
-	def predict(self, X):
-		"""
-		Predicts the given parameters.
-
-		Parameters
-		-----------
-		X : array_like, shape=[n_samples, n_features]
-		    Data
-
-		Returns
-		-------
-		y_tilde : array_like
-		    The predicted values
-		"""
-
-		y_tilde = X.dot(self.beta)
-		return y_tilde
-
-	def store_beta(self, name):
-		"""
-		Saves computed beta-values
-
-		Parameters
-		-----------
-		Name : string, name of file to store values to
-
-		Returns
-		-------
-
-		"""
-
-		np.save(name, self.beta)
-
-	def load_beta(self, name):
-		"""
-		Loads stored beta-values
-
-		Parameters
-		-----------
-		Name : string, name of file values are stored in
-
-		Returns
-		-------
-
-		"""
-
-		self.beta = np.load(name)
 
 
 def update_progress(job_title, progress):
