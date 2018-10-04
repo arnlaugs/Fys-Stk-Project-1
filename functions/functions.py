@@ -1,8 +1,8 @@
 import sys
 import numpy as np
-from sklearn.linear_model import Lasso
-from regression import *
-
+from regression import OLS, Ridge, Lasso
+import numpy as np
+from matplotlib import c
 """
 A file for all common functions used in project 1
  - Frankefunction for computing the FrankeFunction
@@ -59,10 +59,10 @@ def create_X(x, y, n = 5):
 	return X
 
 
-def plot_surface(x, y, z, title, show = False, trans = False):
+def plot_surface(x, y, z, title, show = False, trans = False,cmap=cm.coolwarm):
 	"""
 	Function to plot surfaces of z, given an x and y.
-	Input: x, y, z (NxN matrices), and a title (string)
+	Input: x, y, z (NxN'Modeler' matrices), and a title (string)
 	"""
 
 	from mpl_toolkits.mplot3d import Axes3D
@@ -76,8 +76,8 @@ def plot_surface(x, y, z, title, show = False, trans = False):
 	if trans:
 		z = z.T
 	# Plot the surface.of the best fit
-	surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
-					   linewidth=0, antialiased=False)
+	surf = ax.plot_surface(x, y, z, cmap=cmap,
+                       linewidth=0, antialiased=False)
 
 	# Customize the z axis automatically
 	z_min = np.min(z)
@@ -88,7 +88,7 @@ def plot_surface(x, y, z, title, show = False, trans = False):
 	ax.set_zlim(z_min, z_max)
 	ax.zaxis.set_major_locator(LinearLocator(10))
 	ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
+	ax.view_init(azim=20,elev=45)
 	# Add a color bar which maps values to colors.
 	fig.colorbar(surf, shrink=0.5, aspect=5)
 	ax.set_title(title)
@@ -115,100 +115,108 @@ def train_test_data(x_,y_,z_,i):
 	return x_learn,y_learn,z_learn,x_test,y_test,z_test
 
 
+def calc_beta(X, z):
+	"""
+	Function for returning beta for ordinary least square regression
+	Using pseudo inverse when the matrix is singular
+	"""
+	if len(z.shape) > 1:
+		z = np.ravel(z)
+
+	return np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(z)
+
 def Bootstrap(x,y,z,k,alpha, method="OLS"):
-	"""
-	Function to who calculate the average MSE and R2 using bootstrap.
-	Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
-	Returns average MSE and average R2
-	"""
+    """Function to who calculate the average MSE and R2 using bootstrap.
+    Takes in x,y and z varibles for a dataset, k number of times bootstraping,alpha and which method beta shall use. (OLS,Ridge or lasso)
+    Returns average MSE and average R2"""
 
-	if len(x.shape) > 1:
-		x = np.ravel(x)
-		y = np.ravel(y)
-		z = np.ravel(z)
+    if len(x.shape) > 1:
+        x = np.ravel(x)
+        y = np.ravel(y)
+        z = np.ravel(z)
 
-	n=len(x)
-	i=np.arange(n)
-	antall=int(n*0.1)
-	MSE_=0
-	R2_=0
+    n=len(x)
+    i=np.arange(n)
+    antall=int(n*0.1)
+    MSE_=0
+    R2_=0
 
-	for t in range(k):
-		x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
-		X= create_X(x_,y_)
-		X_test= create_X(x_test,y_test)
-		
-		if method=="OLS":
-			model=OLS()
+    for t in range(k):
+        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,np.random.choice(n,antall,replace=False))
+        X= create_X(x_,y_)
+        X_test= create_X(x_test,y_test)
 
-		elif method=="Ridge":
-			model = Ridge(lmbda=alpha)
+        if method=="OLS":
+            model=OLS()
 
-		elif method=="Lasso":
-			model = Lasso(alpha=alpha, fit_intercept=False)
+        elif method=="Ridge":
+            model = Ridge(lmbda=alpha)
 
-		else:
-			print("Wrong method, try either Lasso, Ridge or OLS")
+        elif method=="Lasso":
+            model = Lasso(alpha=alpha, fit_intercept=False)
 
-		model.fit(X,z_)
-		z_predict=model.predict(X_test)
-		MSE_+=MSE(z_test,z_predict)
-		R2_+=R2_Score(z_test,z_predict)
+        else:
+            print("Wrong method, try either Lasso, Ridge or OLS")
 
-		"""
-		if MSE(z_test,zpredict) <MSE_:
-			MSE_=MSE(z_test,zpredict)
-			beta_MSE=beta
-			l=t
-		if R2_Score(z_test,zpredict)>R2_:
-			R2_=R2_Score(z_test,zpredict)
-			beta_R2=beta
-			o=t
-	 print(o,R2_,l,MSE_)
-	 print(beta_MSE)
-	 print(beta_R2)
-	 """
-	return (MSE_/k,R2_/k)
+        model.fit(X,z_)
+        z_predict=model.predict(X_test)
+        MSE_+=MSE(z_test,z_predict)
+        R2_+=R2_Score(z_test,z_predict)
 
-def K_fold(x,y,z,k,alpha,method="OLS"):
-	"""
-	Function to who calculate the average MSE and R2 using k-fold.
-	Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
-	Returns average MSE and average R2
-	"""
-	if len(x.shape) > 1:
-		x = np.ravel(x)
-		y = np.ravel(y)
-		z = np.ravel(z)
-	n=len(x)
-	n_k=int(n/k)
-	if n_k*k!=n:
-		print("k needs to be a multiple of ", n)
-	i=np.arange(n)
-	np.random.shuffle(i)
+        """
+        if MSE(z_test,zpredict) <MSE_:
+            MSE_=MSE(z_test,zpredict)
+            beta_MSE=beta
+            l=t
+        if R2_Score(z_test,zpredict)>R2_:
+            R2_=R2_Score(z_test,zpredict)
+            beta_R2=beta
+            o=t
+     print(o,R2_,l,MSE_)
+     print(beta_MSE)
+     print(beta_R2)
+     """
+    return (MSE_/k,R2_/k)
 
-	MSE_=0
-	R2_=0
-	for t in range(k):
-		x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
-		X= create_X(x_,y_)
-		X_test= create_X(x_test,y_test)
-		if method=="OLS":
-			model=OLS()
-		elif method=="Ridge":
-			model = Ridge(lmbda=alpha)
+def K_fold(x,y,z,k,alpha,model,m=5):
+    """Function to who calculate the average MSE and R2 using k-fold.
+    Takes in x,y and z varibles for a dataset, k number of folds, alpha and which method beta shall use. (OLS,Ridge or Lasso)
+    Returns average MSE and average R2"""
+    sys.path.append('../part_a')
+    from OLS import OLS
+    sys.path.append('../part_b')
+    from ridge import Ridge
+    print(m)
+    if len(x.shape) > 1:
+        x = np.ravel(x)
+        y = np.ravel(y)
+        z = np.ravel(z)
+    n=len(x)
+    n_k=int(n/k)
+    if n_k*k!=n:
+        print("k needs to be a multiple of ", n,k)
+    i=np.arange(n)
+    np.random.shuffle(i)
 
-		elif method=="Lasso":
-			model = Lasso(alpha=alpha, fit_intercept=False)
+    MSE_=0
+    R2_=0
+    Variance_=0
+    Bias_=0
+    for t in range(k):
+        x_,y_,z_,x_test,y_test,z_test=train_test_data(x,y,z,i[t*n_k:(t+1)*n_k])
+        X= create_X(x_,y_,n=m)
+        X_test= create_X(x_test,y_test,n=m)
 
-		else:
-			print("Wrong method, try either Lasso, Ridge or OLS")
 
-		model.fit(X,z_)
-		z_predict=model.predict(X_test)
-		MSE_+=MSE(z_test,z_predict)
-		R2_+=R2_Score(z_test,z_predict)
-	return (MSE_/k,R2_/k)
+        model.fit(X,z_)
+        z_predict=model.predict(X_test)
+
+        MSE_+=MSE(z_test,z_predict)
+        R2_+=R2_Score(z_test,z_predict)
+        Bias_+=bias(z_test,z_predict)
+        Variance_+=variance(z_predict)
+
+    return (MSE_/k,R2_/k, Bias_/k,Variance_/k)
 
 
 def variance(y_tilde):
@@ -226,6 +234,61 @@ def bias(y, y_tilde):
 	return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 
+class REGRESSION():
+	"""
+	Superclass for regression types
+	"""
+
+	def __init__(self):
+		pass
+
+	def predict(self, X):
+		"""
+		Predicts the given parameters.
+
+		Parameters
+		-----------
+		X : array_like, shape=[n_samples, n_features]
+		    Data
+
+		Returns
+		-------
+		y_tilde : array_like
+		    The predicted values
+		"""
+
+		y_tilde = X.dot(self.beta)
+		return y_tilde
+
+	def store_beta(self, name):
+		"""
+		Saves computed beta-values
+
+		Parameters
+		-----------
+		Name : string, name of file to store values to
+
+		Returns
+		-------
+
+		"""
+
+		np.save(name, self.beta)
+
+	def load_beta(self, name):
+		"""
+		Loads stored beta-values
+
+		Parameters
+		-----------
+		Name : string, name of file values are stored in
+
+		Returns
+		-------
+
+		"""
+
+		self.beta = np.load(name)
 
 
 def update_progress(job_title, progress):
