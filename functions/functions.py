@@ -302,6 +302,6 @@ def update_progress(job_title, progress):
 	sys.stdout.write(msg)
 	sys.stdout.flush()
 
-def savefigure(name):
+def savefigure(name, figure = "gcf"):
     from matplotlib2tikz import save as tikz_save
-    tikz_save(name, figureheight='\\figureheight', figurewidth='\\figurewidth')
+    tikz_save(name.replace(" ", "_") + ".tex", figure = figure, figureheight='\\figureheight', figurewidth='\\figurewidth')
