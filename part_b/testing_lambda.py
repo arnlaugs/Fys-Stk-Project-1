@@ -26,14 +26,18 @@ z = FrankeFunction(x_mesh_, y_mesh_)
 # Add noise
 z_noise = z + np.random.normal(scale = 1, size = (N,N))
 
+
+# Setting order of regression
+order = 5
+
 # Crate design matrix
-X = create_X(x_mesh_, y_mesh_, n=2)
+X = create_X(x_mesh_, y_mesh_, n=order)
 
 # Create best-fit matrix for plotting
 x_r = np.linspace(0,1,N)
 y_r = np.linspace(0,1,N)
 x_mesh, y_mesh = np.meshgrid(x,y)
-X_r = create_X(x_mesh, y_mesh, n=2)
+X_r = create_X(x_mesh, y_mesh, n=order)
 
 
 
@@ -71,7 +75,7 @@ plt.semilogx(lmbdas, R2_R, label='Ridge')
 plt.semilogx(lmbdas, R2_L, label='Lasso')
 plt.grid()
 plt.legend(fontsize=14)
-plt.title(r'Varying $\lambda$ for 2th order regression', size=14)
+plt.title(r'Varying $\lambda$ ' + 'for %dth order regression' %(order), size=14)
 plt.xlabel(r'$\lambda$', size=13)
 plt.ylabel('R2-score', size=13)
 plt.tick_params(labelsize=13)
