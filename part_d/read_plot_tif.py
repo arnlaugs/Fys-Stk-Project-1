@@ -17,11 +17,10 @@ from matplotlib import cm
 
 # Load the terrain
 terrain = imread('n59_e010_1arc_v3.tif')
-print(np.shape(terrain))
-N = 1800
-terrain = terrain[terrain.shape[0]-N-1800:1801,terrain.shape[1]-N:]
-print(terrain.shape)
-m=10
+
+N = 1801
+terrain = terrain[N-1:]
+m=20
 # Creates mesh of image pixels
 x = np.linspace(0,1, np.shape(terrain)[0])
 y = np.linspace(0,1, np.shape(terrain)[1])
@@ -29,9 +28,17 @@ x_mesh, y_mesh = np.meshgrid(x,y)
 
 X = create_X(x_mesh, y_mesh,n=m)
 
-R_ols = OLS();                  R_ols.fit(X, terrain)
-R_r = Ridge(lmbda=1.0);         R_r.fit(X, terrain)
-R_l = Lasso(alpha=0.1, fit_intercept=False); R_l.fit(X, np.ravel(terrain))
+R_ols = OLS()
+R_ols.load_beta("OLS_20.npy")
+#R_ols.fit(X, terrain)
+
+R_r = Ridge(lmbda=1.0)
+R_r.load_beta("Ridge_20.npy")
+#R_r.fit(X, terrain)
+
+R_l = Lasso(alpha=0.1, fit_intercept=False);
+R_l.load_beta("Lasso_20.npy")
+#R_l.fit(X, np.ravel(terrain))
 
 
 
@@ -41,15 +48,15 @@ i=0
 
 for method in [R_ols, R_r, R_l]:
     z_reg = (method.predict(X)).reshape((N,N))
-    fig, ax ,surf=plot_surface(x_mesh, y_mesh, (z_reg.reshape((N,N)).T), labels[i] + " m= "+str(m)+ " N=500", show=True,cmap=cm.viridis)
+    fig, ax , surf =plot_surface(x_mesh, y_mesh, (z_reg.reshape((N,N)).T), labels[i] + " m= "+str(m)+ " N=500", cmap=cm.viridis)
 
     print('============================')
     print(labels[i])
     print("MSE: %.5f" %MSE(terrain, z_reg))
     print("R2-score: %.5f \n" %R2_Score(terrain, z_reg))
 
-    fig.show()
-    savefigure(labels[i] + str(m)+ "N_500")
+    #fig.show()
+    savefigure(labels[i] + str(m)+ "N_500", figure = fig)
     i+=1
 
 
@@ -59,7 +66,8 @@ print(x_mesh.shape, y_mesh.shape, terrain.shape)
 fig, ax ,surf = plot_surface(x_mesh, y_mesh, terrain.T,"Terrain, N=1800", cmap=cm.viridis)
 #fig.savefig("Terrain_N_1800.png")
 #ax.view_init(azim=10,elev=45)
-plt.show()
+savefigure("terrain", figure = fig)
+#plt.show()
 
 # Shows image
 """
