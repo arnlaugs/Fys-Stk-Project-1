@@ -1,0 +1,96 @@
+% This file was created by matplotlib2tikz v0.6.18.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+
+\begin{axis}[
+height=\figureheight,
+tick align=outside,
+tick pos=left,
+width=\figurewidth,
+x grid style={white!69.01960784313725!black},
+xlabel={m},
+xmin=1.1, xmax=20.9,
+y grid style={white!69.01960784313725!black},
+ylabel={MSE,Bias, Variance},
+ymin=9420.57403753782, ymax=22509.2450827236
+]
+\addplot [semithick, color0, mark=x, mark size=3, mark options={solid}, forget plot]
+table [row sep=\\]{%
+2	11898.7001387446 \\
+3	11603.854679917 \\
+4	11548.9330971979 \\
+5	11547.0729218018 \\
+6	11229.289077186 \\
+7	10925.5531947043 \\
+8	10785.0670198136 \\
+10	10704.8707525544 \\
+15	10492.9345143474 \\
+20	10450.8500913633 \\
+};
+\addplot [semithick, color1, mark=x, mark size=3, mark options={solid}, forget plot]
+table [row sep=\\]{%
+2	10015.5136305008 \\
+3	10310.5245058503 \\
+4	10361.0076996119 \\
+5	10358.0802580527 \\
+6	10691.2825012871 \\
+7	10979.0693482526 \\
+8	11129.1492243065 \\
+10	11183.8020066416 \\
+15	11336.0770418337 \\
+20	11415.3245190755 \\
+};
+\addplot [semithick, color2, mark=x, mark size=3, mark options={solid}, forget plot]
+table [row sep=\\]{%
+2	21914.180241555 \\
+3	21914.1304494886 \\
+4	21914.1779599836 \\
+5	21914.1665099883 \\
+6	21914.1222284727 \\
+7	21914.2757097188 \\
+8	21914.2278692557 \\
+10	21914.2410698206 \\
+15	21914.3054897606 \\
+20	21914.2771379964 \\
+};
+\end{axis}
+
+\begin{axis}[
+axis y line=right,
+height=\figureheight,
+legend cell align={left},
+legend entries={{MSE},{Varias},{Bias},{R2}},
+legend style={at={(0.75,0.5)}, anchor=center, draw=white!80.0!black},
+tick align=outside,
+width=\figurewidth,
+x grid style={white!69.01960784313725!black},
+xmin=1.1, xmax=20.9,
+xtick pos=left,
+y grid style={white!69.01960784313725!black},
+ylabel={R2 score},
+ymin=0.453726660748235, ymax=0.526403579067855,
+ytick pos=right
+]
+\addlegendimage{no markers, color0}
+\addlegendimage{no markers, color1}
+\addlegendimage{no markers, color2}
+\addlegendimage{no markers, black}
+\addplot [semithick, black, mark=x, mark size=3, mark options={solid}]
+table [row sep=\\]{%
+2	0.457030157035491 \\
+3	0.470483230298076 \\
+4	0.472990688493405 \\
+5	0.473076193920199 \\
+6	0.48757598474535 \\
+7	0.501435613101787 \\
+8	0.507850253107183 \\
+10	0.511506332920282 \\
+15	0.521178233886182 \\
+20	0.523100082780599 \\
+};
+\end{axis}
+
+\end{tikzpicture}
