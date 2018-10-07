@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.linear_model import Lasso as scikit_Lasso
-from scipy.linalg import solve_triangular
 from functions import *
 
 class REGRESSION():
@@ -81,16 +80,7 @@ class OLS(REGRESSION):
 		"""
 		if len(y.shape) > 1:
 			y = np.ravel(y)
-		"""
-		try:
-			Q, R = np.linalg.qr(X)
-
-			c1 = Q.T.dot(y)
-
-			self.beta = solve_triangular(R, c1)
-
-		except np.linalg.linalg.LinAlgError:
-		"""	
+	
 		self.beta = np.linalg.pinv(X.T.dot(X)).dot(X.T).dot(y)
 
 
