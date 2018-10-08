@@ -10,7 +10,8 @@ In this respotory you will find codes used for project 1 in Fys-Stk4155. Authors
     Plots the error of OLS with increasing polynomial degree. 
 #### OLS.py
     Prints β values for OLS regression and plot the regression. 
-   
+#### Franke.py 
+     Plots the Franke's function and regressions of it. 
    
 ### /part_b:
   #### ridge.py
