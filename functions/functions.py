@@ -3,11 +3,6 @@ import numpy as np
 from matplotlib import cm
 """
 A file for all common functions used in project 1
- - Frankefunction for computing the FrankeFunction
- - MSE for computing the mean squared error
- - R2_Score for computing the R2 score
- - create_X for creating the design matrix
- - plot_surface for plotting surfaces z(x,y)
 """
 
 
@@ -23,7 +18,7 @@ def MSE(y, y_tilde):
 	Function for computing mean squared error.
 	Input is y: analytical solution, y_tilde: computed solution.
 	"""
-	return np.mean((y - y_tilde)**2)#np.sum((y-y_tilde)**2)/y.size
+	return np.sum((y-y_tilde)**2)/y.size
 
 def R2_Score(y, y_tilde):
 	"""
@@ -155,14 +150,14 @@ def variance(y_tilde):
 	"""
 	Calculates the variance of the predicted values y_tilde.
 	"""
-	return np.var(y_tilde) #np.sum((y_tilde - np.mean(y_tilde))**2)/np.size(y_tilde)
+	return np.sum((y_tilde - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 def bias(y, y_tilde):
 	"""
 	Calculates the bias of the predicted values y_tilde compared to
 	the actual data y.
 	"""
-	return np.mean((y - np.mean(y_tilde))**2 )#np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
+	return np.sum((y - np.mean(y_tilde))**2)/np.size(y_tilde)
 
 
 def update_progress(job_title, progress):
@@ -178,6 +173,9 @@ def update_progress(job_title, progress):
 
 
 def savefigure(name, figure = "gcf"):
+	"""
+	Function for saving figures as a .tex-file for easier integration with latex.
+	"""
 	try:
 		from matplotlib2tikz import save as tikz_save
 		tikz_save(name.replace(" ", "_") + ".tex", figure = figure, figureheight='\\figureheight', figurewidth='\\figurewidth')
