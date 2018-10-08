@@ -1,11 +1,8 @@
 # Importing functions from folder with common functions for project 1
 import sys
 sys.path.append('../functions')
-sys.path.append('../part_a')	  # Add folder with OLS
-sys.path.append('../part_b')	  # Add folder with Ridge
 from functions import *
 from regression import OLS, Ridge, Lasso
-#from sklearn.linear_model import Lasso
 
 import numpy as np
 from imageio import imread
@@ -59,7 +56,6 @@ for method in [R_ols, R_l, R_r]:
 	i+=1
 
 
-#print(x_mesh.shape, y_mesh.shape, terrain.shape)
 # Plots surface plot
 
 fig2, ax2, surf2 = plot_surface(x_mesh, y_mesh, terrain.T, "", cmap=cm.viridis, figsize = half_size)

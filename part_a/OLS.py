@@ -44,7 +44,8 @@ X_r = create_X(x_mesh, y_mesh, n=n)
 
 # Predict
 z_reg = (model.predict(X_r)).reshape((N,N))
-plot_surface(x_mesh, y_mesh, z_reg, "OLS regression", show=True)
+plot_surface(x_mesh, y_mesh, z_reg, "OLS regression")
 print('============================ \n')
 print("MSE: %.5f" %MSE(z, z_reg))
 print("R2_Score: %.5f" %R2_Score(z, z_reg))
+

@@ -54,7 +54,7 @@ def create_X(x, y, n = 5):
 	return X
 
 
-def plot_surface(x, y, z, title, show = False, cmap=cm.coolwarm, figsize = None):
+def plot_surface(x, y, z, title = "", show = False, cmap=cm.coolwarm, figsize = None):
 	"""
 	Function to plot surfaces of z, given an x and y.
 	Input: x, y, z (NxN'Modeler' matrices), and a title (string)
