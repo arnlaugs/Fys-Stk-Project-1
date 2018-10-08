@@ -1,6 +1,6 @@
 # Fys-Stk-Project-1
 
-In this respotory you will find codes used for project 1 in Fys-Stk4155. Authers are Markus Leira Asprusten, Maren Rasmussen and Arnlaug Høgås Skjæveland. 
+In this respotory you will find codes used for project 1 in Fys-Stk4155. Authors are Markus Leira Asprusten, Maren Rasmussen and Arnlaug Høgås Skjæveland. 
 
 ## Description of programs
 ### /part_a:
@@ -25,6 +25,13 @@ In this respotory you will find codes used for project 1 in Fys-Stk4155. Authers
        Terrain data file
   #### read_plot_tif.py
        Plot the terrain data and terrain regression.
-### functions/
+### /functions
   #### functions.py
-        A file with many of the functions used in this project. 
+        A file with many of the functions used in other programs in this project. 
+        FrankeFunction(x,y), MSE(y, y_tilde), R2_Score(y, y_tilde), create_X(x, y, n = 5),
+        plot_surface(x, y, z, title, show = False, cmap=cm.coolwarm, figsize = None),
+        train_test_data(x_,y_,z_,i), K_fold(x,y,z,k,alpha,model,m=5, ret_std = False), 
+        variance(y_tilde), bias(y, y_tilde), update_progress(job_title, progress) 
+        and savefigure(name, figure = "gcf")
+  #### regression.py
+        A class hierarchy for the regression methodes. 
