@@ -18,9 +18,9 @@ from matplotlib import cm
 # Load the terrain
 terrain = imread('n59_e010_1arc_v3.tif')
 
-N = 500
+N = 1800
 terrain = terrain[:N,:N]
-m = 80
+m = 10
 # Creates mesh of image pixels
 x = np.linspace(0,1, np.shape(terrain)[0])
 y = np.linspace(0,1, np.shape(terrain)[1])
@@ -30,12 +30,10 @@ x_mesh, y_mesh = np.meshgrid(x,y)
 X = create_X(x_mesh, y_mesh,n=m)
 
 R_ols = OLS()
-#R_ols.fit(X, terrain)
 
-#R_r = Ridge(lmbda=1.0)
+R_r = Ridge(lmbda=1.0)
 
-
-#R_l = Lasso(alpha=0.1, fit_intercept=False);
+R_l = Lasso(alpha=0.1, fit_intercept=False);
 
 
 
@@ -46,7 +44,7 @@ half_size = (2.64429, 1.98322)
 
 i=0
 
-for method in [R_ols]:
+for method in [R_ols, R_l, R_r]:
 	method.fit(X, terrain)
 	z_reg = (method.predict(X)).reshape((N,N))
 	fig, ax , surf =plot_surface(x_mesh, y_mesh, (z_reg.reshape((N,N)).T), "", cmap=cm.viridis, figsize = half_size)
@@ -58,29 +56,13 @@ for method in [R_ols]:
 
 
 	fig.savefig(("%s%iN%i.png" %(labels[i], m, N)).replace(" ", "_"), dpi = 200)
-	#plt.show()
-	#savefigure(labels[i] + "%iN%i" %(m, N), figure = fig)
 	i+=1
 
 
 #print(x_mesh.shape, y_mesh.shape, terrain.shape)
 # Plots surface plot
 
-
 fig2, ax2, surf2 = plot_surface(x_mesh, y_mesh, terrain.T, "", cmap=cm.viridis, figsize = half_size)
-#plt.show()
 fig2.savefig("terrainN%i.png" %(N), dpi = 200)
-#fig.savefig("Terrain_N_1800.png")
-#ax.view_init(azim=10,elev=45)
 plt.show()
-#savefigure("terrainN%i" %(N), figure = fig)
 
-# Shows image
-"""
-plt.figure()
-plt.title('Terrain over the Oslo area')
-plt.imshow(terrain, cmap='gray')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.show()
-"""

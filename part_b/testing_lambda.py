@@ -72,7 +72,7 @@ for i in range(num):
 # Plotting the results
 plt.semilogx(lmbdas, R2_OLS, label='OLS')
 plt.semilogx(lmbdas, R2_R, label='Ridge')
-plt.semilogx(lmbdas, R2_L, label='Lasso')
+#plt.semilogx(lmbdas, R2_L, label='Lasso')
 plt.grid()
 plt.legend(fontsize=14)
 plt.title(r'Varying $\lambda$ ' + 'for %dth order regression' %(order), size=14)
